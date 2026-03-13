@@ -1,0 +1,63 @@
+@model WebLearn.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Create Instructor Account";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> Create Instructor Account</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" asp-action="Register" asp-controller="Auth">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display:@(ViewContext.ModelState.IsValid ? "none" : "block")"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label">Username <span class="text-danger">*</span></label>
+                        <input asp-for="Username" class="form-control" autocomplete="username" placeholder="e.g. jsmith">
+                        <div class="form-text">3–50 characters; letters, digits, underscores, hyphens only.</div>
+                        <span asp-validation-for="Username" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DisplayName" class="form-label">Display Name <span class="text-danger">*</span></label>
+                        <input asp-for="DisplayName" class="form-control" autocomplete="name" placeholder="e.g. Jane Smith">
+                        <div class="form-text">Shown to students as the course author.</div>
+                        <span asp-validation-for="DisplayName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input asp-for="Email" class="form-control" autocomplete="email" placeholder="you@example.com">
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <input asp-for="Password" class="form-control" autocomplete="new-password">
+                        <div class="form-text">At least 8 characters with uppercase, lowercase, digit, and special character.</div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                        <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-person-check"></i> Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center text-muted">
+                Already have an account? <a href="/Auth/Login">Sign in</a>
+            </div>
+        </div>
+    </div>
+</div>

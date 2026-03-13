@@ -1,0 +1,73 @@
+@model IEnumerable<WebLearn.Models.ViewModels.UnitDetailViewModel>
+@{
+    var course = ViewData["Course"] as WebLearn.Models.Course;
+    ViewData["Title"] = "Units";
+    ViewData["ActiveNav"] = "courses";
+    Layout = "_InstructorLayout";
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Instructor/Courses">Courses</a></li>
+        <li class="breadcrumb-item active">@course?.Title Units</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="bi bi-folder"></i> Units — @course?.Title</h1>
+    <a href="/Instructor/CreateUnit?courseId=@course?.Id" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Unit</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No units yet. <a href="/Instructor/CreateUnit?courseId=@course?.Id">Add the first unit.</a></div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr><th>Order</th><th>Unit</th><th>Lessons</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var uvm in Model)
+                {
+                    <tr>
+                        <td>@uvm.Unit.SortOrder</td>
+                        <td><strong>@uvm.Unit.Title</strong><br><small class="text-muted">@uvm.Unit.Description</small></td>
+                        <td><span class="badge bg-secondary">@uvm.Lessons.Count</span></td>
+                        <td>
+                            <a href="/Instructor/AssignLessons?unitId=@uvm.Unit.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-list-check"></i> Lessons
+                            </a>
+                            <a href="/Instructor/EditUnit/@uvm.Unit.Id" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal" data-bs-target="#delUnit-@uvm.Unit.Id">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <div class="modal fade" id="delUnit-@uvm.Unit.Id" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header"><h5>Confirm Delete</h5></div>
+                                        <div class="modal-body">Delete unit <strong>@uvm.Unit.Title</strong>?</div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="post" action="/Instructor/DeleteUnit" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@uvm.Unit.Id">
+                                                <input type="hidden" name="courseId" value="@course?.Id">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

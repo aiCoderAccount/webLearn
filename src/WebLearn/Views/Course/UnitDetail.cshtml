@@ -1,0 +1,26 @@
+@model WebLearn.Models.ViewModels.UnitDetailViewModel
+@{
+    ViewData["Title"] = Model.Unit.Title;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Course">Courses</a></li>
+        <li class="breadcrumb-item active">@Model.Unit.Title</li>
+    </ol>
+</nav>
+
+<h1 class="h2 mb-3"><i class="bi bi-folder text-primary"></i> @Model.Unit.Title</h1>
+@if (!string.IsNullOrEmpty(Model.Unit.Description))
+{
+    <p class="lead text-muted">@Model.Unit.Description</p>
+}
+
+<div class="list-group mt-4">
+    @foreach (var lesson in Model.Lessons)
+    {
+        <a href="/Lesson/View/@lesson.Id?unitId=@Model.Unit.Id" class="list-group-item list-group-item-action">
+            <i class="bi bi-file-earmark-text text-primary me-2"></i> @lesson.Title
+        </a>
+    }
+</div>

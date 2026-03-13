@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS Instructors (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT NOT NULL UNIQUE,
+    PasswordHash TEXT NOT NULL,
+    DisplayName TEXT NOT NULL DEFAULT '',
+    Email TEXT NOT NULL DEFAULT '',
+    CreatedAt TEXT NOT NULL,
+    UpdatedAt TEXT NOT NULL
+);

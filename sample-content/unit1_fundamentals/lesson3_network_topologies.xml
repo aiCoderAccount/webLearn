@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="Network Topologies" level="beginner">
+  <objective>Define network topology and explain its importance</objective>
+  <objective>Describe the five common network topologies</objective>
+  <objective>Compare the advantages and disadvantages of each topology</objective>
+
+  <definition term="Network Topology">
+    The arrangement of nodes (computers, switches, routers) and connections (cables, wireless links) in a network. It describes both the physical layout and the logical flow of data.
+  </definition>
+
+  <example title="Bus Topology">
+    All devices connect to a single shared cable (the "bus"). Data travels along the cable and is received by all devices, but only the intended recipient processes it.
+    Advantage: Simple, inexpensive. Disadvantage: A single cable failure breaks the entire network.
+  </example>
+
+  <example title="Star Topology">
+    All devices connect to a central hub or switch. This is the most common topology in modern LANs (home routers, office switches).
+    Advantage: Easy to manage, failure of one device doesn't affect others. Disadvantage: Central hub is a single point of failure.
+  </example>
+
+  <example title="Ring Topology">
+    Devices connect in a circular chain. Data travels in one direction around the ring.
+    Advantage: Equal access for all nodes. Disadvantage: A single broken connection can disrupt the entire network.
+  </example>
+
+  <example title="Mesh Topology">
+    Every device has a dedicated connection to every other device. Used in WANs and critical infrastructure.
+    Advantage: Highly redundant, no single point of failure. Disadvantage: Expensive, complex cabling.
+  </example>
+
+  <example title="Hybrid Topology">
+    A combination of two or more topologies (e.g., a star-bus or star-ring). Most real-world networks are hybrid topologies.
+  </example>
+
+  <note type="tip">
+    For modern enterprise networks, star topology (with a central managed switch) is the standard choice for LANs. Mesh topology is used in the internet's core routing infrastructure.
+  </note>
+
+  <diagram alt="Network Topology Comparison" caption="Common network topologies">
+Bus:    A---B---C---D---E  (single cable)
+Star:       A
+           /|\
+          B-S-C            (S = Switch/Hub)
+           \|/
+            D
+Ring:   A--B--C--D--A     (circular)
+Mesh:   A---B
+        |\ /|
+        | X |              (every node connected to every other)
+        |/ \|
+        C---D
+  </diagram>
+
+  <quiz title="Topology Quiz">
+    <question type="multiple-choice" text="Which topology provides the highest level of redundancy?">
+      <answer correct="false">Bus</answer>
+      <answer correct="false">Star</answer>
+      <answer correct="false">Ring</answer>
+      <answer correct="true">Mesh</answer>
+    </question>
+    <question type="true-false" text="In a star topology, if the central switch fails, all network communication stops.">
+      <answer correct="true">True</answer>
+      <answer correct="false">False</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="easy">
+    Draw a diagram of a small office network with 8 computers, 1 switch, and 1 router.
+    What topology does this represent? What would happen if the switch failed?
+  </exercise>
+
+  <summary>
+    <item>Network topology describes how devices are physically and logically connected</item>
+    <item>Bus: Simple but fragile; Star: Most common, central switch; Ring: Circular path</item>
+    <item>Mesh: Maximum redundancy, used in WANs; Hybrid: Real-world combination</item>
+    <item>Star topology dominates modern LANs; mesh is used in critical infrastructure</item>
+  </summary>
+</lesson>

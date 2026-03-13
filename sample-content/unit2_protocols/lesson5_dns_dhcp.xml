@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="DNS and DHCP" level="intermediate">
+  <objective>Explain the Domain Name System and how it resolves names to IP addresses</objective>
+  <objective>Describe DHCP and how it automatically assigns IP configuration</objective>
+  <objective>Trace a DNS resolution from client to authoritative server</objective>
+
+  <definition term="DNS (Domain Name System)">
+    A hierarchical distributed naming system that translates human-readable domain names (e.g., www.example.com) into IP addresses (e.g., 93.184.216.34).
+  </definition>
+
+  <note type="info">
+    DNS is often called the "phone book of the internet." Without it, you'd need to memorize IP addresses instead of domain names.
+  </note>
+
+  <example title="DNS Resolution Process">
+    When you type www.example.com in your browser:
+    1. Your computer checks its local DNS cache
+    2. If not cached, asks your ISP's Recursive Resolver
+    3. Resolver asks the Root Name Server (.) for .com TLD server
+    4. Root server refers to the .com TLD Name Server
+    5. TLD server refers to example.com's Authoritative Server
+    6. Authoritative server returns the IP address
+    7. Resolver caches the result and returns it to you
+  </example>
+
+  <diagram alt="DNS Resolution Chain" caption="Recursive DNS query process">
+Client → Recursive Resolver → Root NS (.)
+                           → TLD NS (.com)
+                           → Authoritative NS (example.com)
+                           ← IP: 93.184.216.34
+Client ← 93.184.216.34
+  </diagram>
+
+  <definition term="DNS Record Types">
+    A Record: Maps hostname to IPv4 address
+    AAAA Record: Maps hostname to IPv6 address
+    CNAME: Alias pointing to another hostname
+    MX Record: Mail server for a domain
+    TXT Record: Text data (used for SPF, DKIM, etc.)
+  </definition>
+
+  <note type="tip">
+    DNS uses UDP port 53 for queries (fast, lightweight) and TCP port 53 for large responses or zone transfers.
+  </note>
+
+  <definition term="DHCP (Dynamic Host Configuration Protocol)">
+    A network protocol that automatically assigns IP addresses and network configuration (subnet mask, default gateway, DNS servers) to devices joining a network.
+  </definition>
+
+  <example title="DHCP DORA Process">
+    DHCP uses a 4-step process called DORA:
+    1. Discover: Client broadcasts "I need an IP address!"
+    2. Offer: DHCP server responds "I can give you 192.168.1.50"
+    3. Request: Client broadcasts "I'll take 192.168.1.50!"
+    4. Acknowledge: Server confirms "It's yours for 24 hours"
+  </example>
+
+  <codeblock language="plaintext">
+DHCP DORA Process:
+  Client                    DHCP Server
+    |---DHCPDISCOVER (bcast)--->|
+    |&lt;--DHCPOFFER (unicast)-----|  offers: 192.168.1.50
+    |---DHCPREQUEST (bcast)---->|  requests: 192.168.1.50
+    |&lt;--DHCPACK (unicast)-------|  lease granted: 24h
+  </codeblock>
+
+  <note type="warning">
+    DHCP leases expire. When a lease expires, the device must renew it or it loses its IP address. Servers and printers should use static IP addresses to ensure consistent accessibility.
+  </note>
+
+  <quiz title="DNS and DHCP Quiz">
+    <question type="multiple-choice" text="What type of DNS record maps a domain name to an IPv4 address?">
+      <answer correct="true">A Record</answer>
+      <answer correct="false">AAAA Record</answer>
+      <answer correct="false">CNAME Record</answer>
+      <answer correct="false">MX Record</answer>
+    </question>
+    <question type="multiple-choice" text="What does the 'D' in DHCP DORA stand for?">
+      <answer correct="true">Discover</answer>
+      <answer correct="false">Deliver</answer>
+      <answer correct="false">Dynamic</answer>
+      <answer correct="false">Delegate</answer>
+    </question>
+    <question type="true-false" text="DHCP uses TCP for all communications.">
+      <answer correct="false">True</answer>
+      <answer correct="true">False</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="medium">
+    Open a command prompt and run:
+    (a) nslookup google.com — observe the DNS resolution
+    (b) ipconfig /all (Windows) or ip addr (Linux) — note your DHCP-assigned IP, subnet mask, gateway, and DNS servers
+    (c) ipconfig /displaydns — view your local DNS cache
+  </exercise>
+
+  <summary>
+    <item>DNS translates domain names to IP addresses using a hierarchical distributed system</item>
+    <item>DNS resolution: Local cache → Recursive Resolver → Root NS → TLD NS → Authoritative NS</item>
+    <item>Common DNS records: A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), TXT</item>
+    <item>DHCP automatically assigns IP addresses using DORA: Discover, Offer, Request, Acknowledge</item>
+    <item>Use static IPs for servers; DHCP for client devices</item>
+  </summary>
+</lesson>

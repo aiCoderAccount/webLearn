@@ -1,0 +1,70 @@
+@model WebLearn.Models.ViewModels.LessonEditViewModel
+@{
+    ViewData["Title"] = "Create Lesson";
+    ViewData["ActiveNav"] = "lessons";
+    Layout = "_InstructorLayout";
+}
+
+<h1 class="h3 mb-4"><i class="bi bi-file-earmark-plus"></i> Create Lesson</h1>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><strong>Lesson Editor</strong></div>
+            <div class="card-body">
+                <form method="post" asp-action="CreateLesson" asp-controller="Instructor" id="lessonForm">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Lesson Title <span class="text-danger">*</span></label>
+                        <input asp-for="Title" class="form-control">
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="XmlContent" class="form-label">XML Content</label>
+                        <textarea asp-for="XmlContent" class="form-control font-monospace" rows="18" id="xmlEditor"
+                                  placeholder="&lt;lesson title=&quot;My Lesson&quot; level=&quot;beginner&quot;&gt;&#10;  &lt;objective&gt;Understand...&lt;/objective&gt;&#10;&lt;/lesson&gt;"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Save Lesson</button>
+                        <button type="button" class="btn btn-primary" id="previewBtn"><i class="bi bi-eye"></i> Preview</button>
+                        <a href="/Instructor/Lessons" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Preview</strong>
+                <span class="badge bg-secondary" id="previewStatus">Not rendered</span>
+            </div>
+            <div class="card-body overflow-auto" id="previewPanel" style="max-height:600px">
+                <p class="text-muted fst-italic">Click "Preview" to render your XML.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    document.getElementById('previewBtn').addEventListener('click', async function() {
+        const xml = document.getElementById('xmlEditor').value;
+        const status = document.getElementById('previewStatus');
+        status.textContent = 'Loading...';
+        try {
+            const resp = await fetch('/Instructor/PreviewLesson', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ xml })
+            });
+            document.getElementById('previewPanel').innerHTML = await resp.text();
+            status.textContent = 'Rendered';
+            status.className = 'badge bg-success';
+        } catch(e) {
+            status.textContent = 'Error';
+            status.className = 'badge bg-danger';
+        }
+    });
+    </script>
+}

@@ -1,0 +1,58 @@
+/* WebLearn – site-wide styles */
+
+/* Hero Banner */
+.hero-banner {
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+}
+
+/* Sidebar */
+.sidebar .nav-link {
+    color: #495057;
+    padding: 0.6rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 2px;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+}
+
+/* Lesson content */
+.lesson-content dl dt {
+    font-weight: 600;
+    color: #1a237e;
+}
+.lesson-content dl dd {
+    margin-left: 1rem;
+    color: #495057;
+}
+.lesson-content pre code {
+    font-size: 0.875rem;
+}
+.lesson-content .quiz-answer.text-success label {
+    color: inherit;
+}
+
+/* Code blocks */
+pre {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+/* Monospace textarea */
+.font-monospace {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+}
+
+/* Card hover effect */
+.card {
+    transition: box-shadow 0.15s ease;
+}
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="HTTP and HTTPS" level="intermediate">
+  <objective>Describe the HTTP request/response cycle</objective>
+  <objective>Identify common HTTP methods, status codes, and headers</objective>
+  <objective>Explain how HTTPS uses TLS to provide security</objective>
+
+  <definition term="HTTP (HyperText Transfer Protocol)">
+    An application-layer protocol that defines how clients (browsers) and servers communicate to transfer web content. HTTP is stateless — each request is independent.
+  </definition>
+
+  <note type="info">
+    HTTP typically uses port 80. HTTPS (HTTP Secure) uses port 443 and encrypts all communication using TLS (Transport Layer Security).
+  </note>
+
+  <example title="HTTP Request/Response Cycle">
+    1. You type https://www.example.com in your browser
+    2. Browser performs DNS lookup to get the server's IP
+    3. Browser establishes a TCP connection (port 443 for HTTPS)
+    4. TLS handshake encrypts the connection
+    5. Browser sends an HTTP GET request
+    6. Server processes the request and sends an HTTP response
+    7. Browser renders the HTML response
+  </example>
+
+  <codeblock language="http">
+GET /index.html HTTP/1.1
+Host: www.example.com
+Accept: text/html,application/xhtml+xml
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Connection: keep-alive
+
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1256
+Cache-Control: max-age=3600
+
+&lt;html&gt;...&lt;/html&gt;
+  </codeblock>
+
+  <definition term="HTTP Methods">
+    GET: Retrieve a resource (read-only, idempotent)
+    POST: Submit data to create a resource
+    PUT: Replace a resource entirely
+    PATCH: Partially update a resource
+    DELETE: Remove a resource
+    HEAD: Like GET but returns only headers
+    OPTIONS: Query available methods
+  </definition>
+
+  <definition term="HTTP Status Codes">
+    1xx — Informational (100 Continue)
+    2xx — Success (200 OK, 201 Created, 204 No Content)
+    3xx — Redirection (301 Moved Permanently, 302 Found)
+    4xx — Client Error (400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found)
+    5xx — Server Error (500 Internal Server Error, 503 Service Unavailable)
+  </definition>
+
+  <note type="tip">
+    A quick way to remember status codes: 2=happy (success), 4=your fault (client error), 5=our fault (server error).
+  </note>
+
+  <definition term="HTTPS and TLS">
+    HTTPS wraps HTTP in TLS (Transport Layer Security). TLS provides:
+    - Encryption: Data cannot be read by eavesdroppers
+    - Authentication: Server presents a certificate to prove its identity
+    - Integrity: Data cannot be tampered with in transit
+  </definition>
+
+  <example title="TLS Handshake (Simplified)">
+    1. Client Hello: Browser sends supported TLS versions and cipher suites
+    2. Server Hello: Server selects cipher suite, sends its certificate
+    3. Certificate Verification: Browser verifies the certificate with a trusted CA
+    4. Key Exchange: Both sides compute a shared secret key
+    5. Finished: Both sides confirm encryption is active
+    All subsequent HTTP data is encrypted with the negotiated key.
+  </example>
+
+  <note type="warning">
+    Never send sensitive data (passwords, credit cards) over plain HTTP. Always ensure your site uses HTTPS with a valid certificate. Look for the padlock icon in the browser.
+  </note>
+
+  <quiz title="HTTP and HTTPS Quiz">
+    <question type="multiple-choice" text="Which HTTP status code indicates a successful request?">
+      <answer correct="true">200</answer>
+      <answer correct="false">301</answer>
+      <answer correct="false">404</answer>
+      <answer correct="false">500</answer>
+    </question>
+    <question type="multiple-choice" text="Which port does HTTPS use by default?">
+      <answer correct="false">80</answer>
+      <answer correct="true">443</answer>
+      <answer correct="false">8080</answer>
+      <answer correct="false">8443</answer>
+    </question>
+    <question type="multiple-choice" text="Which HTTP method is used to retrieve a web page?">
+      <answer correct="true">GET</answer>
+      <answer correct="false">POST</answer>
+      <answer correct="false">PUT</answer>
+      <answer correct="false">DELETE</answer>
+    </question>
+    <question type="short-answer" text="What does TLS stand for and what does it provide?">
+      <answer correct="true">Transport Layer Security — provides encryption, authentication, and data integrity for HTTPS connections</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="hard">
+    Using your browser's Developer Tools (F12 → Network tab):
+    (a) Visit any HTTPS website and inspect the request/response headers
+    (b) Identify the HTTP method, status code, and content-type
+    (c) Click on the security padlock and examine the TLS certificate details
+    (d) Find at least 3 different HTTP response headers and explain their purpose
+  </exercise>
+
+  <summary>
+    <item>HTTP is a stateless application-layer protocol for transferring web content</item>
+    <item>HTTP methods: GET (read), POST (create), PUT/PATCH (update), DELETE (remove)</item>
+    <item>Status codes: 2xx=success, 3xx=redirect, 4xx=client error, 5xx=server error</item>
+    <item>HTTPS = HTTP + TLS encryption; uses port 443; provides encryption, auth, and integrity</item>
+    <item>Always use HTTPS for any site handling sensitive data</item>
+  </summary>
+</lesson>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="Introduction to Networking" level="beginner">
+  <objective>Define what a computer network is and explain its purpose</objective>
+  <objective>Identify the main types of computer networks (LAN, WAN, MAN)</objective>
+  <objective>Describe the key components of a network</objective>
+
+  <definition term="Computer Network">
+    A collection of interconnected devices (computers, servers, printers, etc.) that can communicate and share resources with each other.
+  </definition>
+
+  <note type="info">
+    The internet is the world's largest computer network, connecting billions of devices across the globe.
+  </note>
+
+  <example title="Home Network">
+    A typical home network includes a router, smartphones, laptops, smart TVs, and a printer — all connected and able to share an internet connection.
+  </example>
+
+  <definition term="LAN (Local Area Network)">
+    A network confined to a small geographic area such as a home, office, or school building. Typically uses Ethernet cables or Wi-Fi.
+  </definition>
+
+  <definition term="WAN (Wide Area Network)">
+    A network spanning large geographic areas, potentially across countries or continents. The internet is the largest WAN.
+  </definition>
+
+  <definition term="MAN (Metropolitan Area Network)">
+    A network that covers a city or large campus, larger than a LAN but smaller than a WAN.
+  </definition>
+
+  <note type="tip">
+    Remember the acronyms: LAN = Local, MAN = Metropolitan, WAN = Wide. The key difference is geographic scope.
+  </note>
+
+  <codeblock language="plaintext">
+Network Types by Size:
+  PAN (Personal) — ~10 meters      e.g., Bluetooth
+  LAN (Local)    — ~1 km           e.g., Home/Office WiFi
+  MAN (Metro)    — ~50 km          e.g., City cable network
+  WAN (Wide)     — Global          e.g., The Internet
+  </codeblock>
+
+  <quiz title="Check Your Understanding">
+    <question type="multiple-choice" text="Which network type typically covers a single building or campus?">
+      <answer correct="true">LAN (Local Area Network)</answer>
+      <answer correct="false">WAN (Wide Area Network)</answer>
+      <answer correct="false">MAN (Metropolitan Area Network)</answer>
+      <answer correct="false">PAN (Personal Area Network)</answer>
+    </question>
+    <question type="true-false" text="The Internet is an example of a WAN.">
+      <answer correct="true">True</answer>
+      <answer correct="false">False</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="easy">
+    List all the network-connected devices in your home or workplace. Identify which type of network connects them (LAN, WAN, etc.) and how they are connected (Wi-Fi, Ethernet, cellular).
+  </exercise>
+
+  <summary>
+    <item>A computer network connects devices to share data and resources</item>
+    <item>Networks are classified by geographic scope: PAN, LAN, MAN, WAN</item>
+    <item>LANs cover small areas (home/office); WANs span countries/continents</item>
+    <item>The Internet is the world's largest WAN</item>
+  </summary>
+</lesson>

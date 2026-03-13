@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="TCP/IP Protocol Suite" level="intermediate">
+  <objective>Describe the four layers of the TCP/IP model</objective>
+  <objective>Explain how TCP ensures reliable, ordered delivery</objective>
+  <objective>Distinguish between TCP and UDP and know when to use each</objective>
+
+  <note type="info">
+    TCP/IP (Transmission Control Protocol/Internet Protocol) is the foundational protocol suite of the internet. Unlike the 7-layer OSI model, TCP/IP uses a simpler 4-layer model.
+  </note>
+
+  <diagram alt="TCP/IP vs OSI comparison" caption="TCP/IP 4-layer model mapped to OSI">
+OSI Model         TCP/IP Model      Protocols
+─────────────     ────────────      ──────────
+Application  ┐
+Presentation ├──► Application  ──► HTTP, FTP, DNS, SMTP
+Session      ┘
+Transport    ───► Transport    ──► TCP, UDP
+Network      ───► Internet     ──► IP, ICMP, ARP
+Data Link    ┐
+Physical     └──► Network      ──► Ethernet, Wi-Fi
+  </diagram>
+
+  <definition term="TCP (Transmission Control Protocol)">
+    A connection-oriented protocol that guarantees reliable, ordered delivery of data. It uses a three-way handshake to establish connections and acknowledges received packets.
+  </definition>
+
+  <example title="TCP Three-Way Handshake">
+    Before data transfer, TCP establishes a connection:
+    1. SYN: Client sends "I want to connect" (SYN flag)
+    2. SYN-ACK: Server replies "OK, I'm ready" (SYN + ACK flags)
+    3. ACK: Client confirms "Great, let's go" (ACK flag)
+    After this handshake, reliable data transfer begins.
+  </example>
+
+  <codeblock language="plaintext">
+TCP Handshake:
+  Client              Server
+    |----SYN------------>|   (Seq=100)
+    |&lt;---SYN-ACK---------|   (Seq=300, Ack=101)
+    |----ACK------------>|   (Ack=301)
+    |====DATA TRANSFER===|
+  </codeblock>
+
+  <definition term="UDP (User Datagram Protocol)">
+    A connectionless protocol that sends data without establishing a connection or guaranteeing delivery. It is faster than TCP but less reliable.
+  </definition>
+
+  <note type="tip">
+    Use TCP when data integrity is critical (web browsing, email, file transfer). Use UDP when speed matters more than reliability (video streaming, online gaming, DNS queries, VoIP).
+  </note>
+
+  <example title="IP Addressing">
+    Every device on the internet has an IP address. IPv4 addresses are 32-bit numbers written as four octets: 192.168.1.1.
+    IPv6 uses 128-bit addresses: 2001:0db8:85a3:0000:0000:8a2e:0370:7334.
+  </example>
+
+  <quiz title="TCP/IP Quiz">
+    <question type="multiple-choice" text="Which protocol would you use for a video streaming application where some packet loss is acceptable?">
+      <answer correct="false">TCP</answer>
+      <answer correct="true">UDP</answer>
+      <answer correct="false">IP</answer>
+      <answer correct="false">HTTP</answer>
+    </question>
+    <question type="multiple-choice" text="How many steps are in the TCP three-way handshake?">
+      <answer correct="false">2</answer>
+      <answer correct="true">3</answer>
+      <answer correct="false">4</answer>
+      <answer correct="false">5</answer>
+    </question>
+    <question type="true-false" text="UDP guarantees that all packets arrive in order.">
+      <answer correct="false">True</answer>
+      <answer correct="true">False</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="medium">
+    Using Wireshark (or a network capture tool), capture traffic and identify:
+    (a) At least one TCP connection showing the three-way handshake
+    (b) At least one UDP communication (e.g., DNS)
+    Compare the packet headers of TCP vs UDP segments.
+  </exercise>
+
+  <summary>
+    <item>TCP/IP has 4 layers: Application, Transport, Internet, Network Access</item>
+    <item>TCP is reliable and connection-oriented; UDP is fast but connectionless</item>
+    <item>TCP uses a three-way handshake (SYN, SYN-ACK, ACK) to establish connections</item>
+    <item>IP provides addressing (IPv4: 32-bit, IPv6: 128-bit) and routing</item>
+    <item>Choose TCP for reliability, UDP for low-latency real-time applications</item>
+  </summary>
+</lesson>

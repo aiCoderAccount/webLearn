@@ -1,0 +1,43 @@
+@model WebLearn.Models.ViewModels.LessonRenderViewModel
+@{
+    ViewData["Title"] = Model.Lesson.Title;
+    int? unitId = ViewData["UnitId"] as int?;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Course">Courses</a></li>
+        @if (unitId.HasValue)
+        {
+            <li class="breadcrumb-item"><a href="/Course/UnitDetail/@unitId">Unit</a></li>
+        }
+        <li class="breadcrumb-item active">@Model.Lesson.Title</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        @Html.Raw(Model.RenderedHtml)
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    // Quiz reveal functionality
+    document.querySelectorAll('.quiz-reveal-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const card = this.closest('.card-body');
+            card.querySelectorAll('.quiz-answer').forEach(ans => {
+                ans.classList.remove('d-none');
+                const isCorrect = ans.dataset.correct === 'true';
+                if (isCorrect) {
+                    ans.classList.add('text-success', 'fw-bold');
+                    ans.querySelector('.form-check-input') && ans.querySelector('.form-check-input').setAttribute('checked', '');
+                }
+            });
+            this.disabled = true;
+            this.textContent = 'Answer Revealed';
+        });
+    });
+    </script>
+}

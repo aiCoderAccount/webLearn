@@ -1,0 +1,70 @@
+@model WebLearn.Models.ViewModels.CourseDetailViewModel
+@{
+    ViewData["Title"] = Model.Course.Title;
+}
+
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Course">Courses</a></li>
+        <li class="breadcrumb-item active">@Model.Course.Title</li>
+    </ol>
+</nav>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h1 class="h2"><i class="bi bi-book text-primary"></i> @Model.Course.Title</h1>
+        <p class="lead">@Model.Course.Description</p>
+        <p class="text-muted"><i class="bi bi-person"></i> @Model.Course.InstructorName</p>
+    </div>
+</div>
+
+<h3 class="mb-3"><i class="bi bi-list-ul"></i> Course Units</h3>
+
+@if (!Model.Units.Any())
+{
+    <div class="alert alert-info">This course has no units yet.</div>
+}
+else
+{
+    <div class="accordion" id="unitsAccordion">
+        @for (int i = 0; i < Model.Units.Count; i++)
+        {
+            var unit = Model.Units[i];
+            <div class="accordion-item mb-2">
+                <h2 class="accordion-header">
+                    <button class="accordion-button @(i > 0 ? "collapsed" : "")" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#unit-@unit.Unit.Id">
+                        <i class="bi bi-folder me-2 text-primary"></i>
+                        <strong>@unit.Unit.Title</strong>
+                        <span class="ms-auto badge bg-secondary me-3">@unit.Lessons.Count lesson(s)</span>
+                    </button>
+                </h2>
+                <div id="unit-@unit.Unit.Id" class="accordion-collapse collapse @(i == 0 ? "show" : "")">
+                    <div class="accordion-body">
+                        @if (!string.IsNullOrEmpty(unit.Unit.Description))
+                        {
+                            <p class="text-muted">@unit.Unit.Description</p>
+                        }
+                        @if (unit.Lessons.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var lesson in unit.Lessons)
+                                {
+                                    <li class="list-group-item">
+                                        <a href="/Lesson/View/@lesson.Id?unitId=@unit.Unit.Id">
+                                            <i class="bi bi-file-earmark-text text-primary"></i> @lesson.Title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted fst-italic">No lessons in this unit yet.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

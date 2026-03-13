@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lesson title="The OSI Model" level="intermediate">
+  <objective>Name the 7 layers of the OSI model in order</objective>
+  <objective>Describe the primary function of each OSI layer</objective>
+  <objective>Explain how data encapsulation works through the OSI layers</objective>
+
+  <note type="info">
+    The OSI (Open Systems Interconnection) model is a conceptual framework that standardizes how different network systems communicate. It was developed by the ISO in 1984.
+  </note>
+
+  <diagram alt="OSI Model Layers" caption="The 7 layers of the OSI Reference Model">
+Layer 7 — Application   (HTTP, FTP, SMTP, DNS)
+Layer 6 — Presentation  (TLS/SSL, JPEG, ASCII)
+Layer 5 — Session       (NetBIOS, RPC)
+Layer 4 — Transport     (TCP, UDP)
+Layer 3 — Network       (IP, ICMP, routing)
+Layer 2 — Data Link     (Ethernet, MAC, ARP)
+Layer 1 — Physical      (Cables, hubs, bits)
+  </diagram>
+
+  <definition term="Data Encapsulation">
+    The process by which each OSI layer adds its own header (and sometimes trailer) to the data received from the layer above, creating a Protocol Data Unit (PDU).
+  </definition>
+
+  <example title="Sending an Email">
+    When you send an email:
+    - Layer 7 (Application): Creates the email message (SMTP)
+    - Layer 4 (Transport): Breaks it into segments, adds port numbers
+    - Layer 3 (Network): Adds IP source and destination addresses
+    - Layer 2 (Data Link): Adds MAC addresses for local delivery
+    - Layer 1 (Physical): Converts to electrical signals on the wire
+  </example>
+
+  <note type="tip">
+    Use the mnemonic "All People Seem To Need Data Processing" (Application, Presentation, Session, Transport, Network, Data Link, Physical) to remember the layers top-down.
+  </note>
+
+  <note type="warning">
+    The OSI model is a reference model. In practice, the TCP/IP model (4 layers) is what the internet actually uses. The OSI model is still essential for understanding and troubleshooting.
+  </note>
+
+  <quiz title="OSI Layer Quiz">
+    <question type="multiple-choice" text="Which OSI layer is responsible for IP addressing and routing?">
+      <answer correct="false">Layer 2 — Data Link</answer>
+      <answer correct="true">Layer 3 — Network</answer>
+      <answer correct="false">Layer 4 — Transport</answer>
+      <answer correct="false">Layer 5 — Session</answer>
+    </question>
+    <question type="multiple-choice" text="TCP and UDP operate at which OSI layer?">
+      <answer correct="false">Layer 3 — Network</answer>
+      <answer correct="true">Layer 4 — Transport</answer>
+      <answer correct="false">Layer 5 — Session</answer>
+      <answer correct="false">Layer 7 — Application</answer>
+    </question>
+    <question type="short-answer" text="What is the PDU name at the Transport layer?">
+      <answer correct="true">Segment (for TCP) or Datagram (for UDP)</answer>
+    </question>
+  </quiz>
+
+  <exercise difficulty="medium">
+    For each of the following protocols, identify which OSI layer it operates at: HTTP, IP, Ethernet, TCP, TLS, DNS.
+    Create a table mapping each protocol to its layer number and name.
+  </exercise>
+
+  <summary>
+    <item>The OSI model has 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application</item>
+    <item>Each layer has specific responsibilities and communicates with adjacent layers</item>
+    <item>Data encapsulation adds headers at each layer going down; headers are removed going up</item>
+    <item>Mnemonic (bottom-up): Please Do Not Throw Sausage Pizza Away</item>
+  </summary>
+</lesson>
