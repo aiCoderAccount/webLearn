@@ -74,7 +74,7 @@ public class CourseService : ICourseService
 
     public async Task<int> CreateCourseAsync(CourseCreateViewModel vm, int instructorId)
     {
-        var now = DateTime.UtcNow.ToString("o");
+        var now = DateTime.UtcNow;
         var course = new Course
         {
             Title = vm.Title,
@@ -100,7 +100,7 @@ public class CourseService : ICourseService
             InstructorId = existing.InstructorId,
             IsPublished = vm.IsPublished ? 1 : 0,
             CreatedAt = existing.CreatedAt,
-            UpdatedAt = DateTime.UtcNow.ToString("o")
+            UpdatedAt = DateTime.UtcNow
         };
         await _courseRepo.UpdateAsync(updated);
         return true;
@@ -119,7 +119,7 @@ public class CourseService : ICourseService
         var course = await _courseRepo.GetByIdAsync(vm.CourseId);
         if (course == null || course.InstructorId != instructorId) return 0;
 
-        var now = DateTime.UtcNow.ToString("o");
+        var now = DateTime.UtcNow;
         var unit = new Unit
         {
             CourseId = vm.CourseId,
@@ -148,7 +148,7 @@ public class CourseService : ICourseService
             Description = vm.Description,
             SortOrder = vm.SortOrder,
             CreatedAt = existing.CreatedAt,
-            UpdatedAt = DateTime.UtcNow.ToString("o")
+            UpdatedAt = DateTime.UtcNow
         };
         await _unitRepo.UpdateAsync(updated);
         return true;

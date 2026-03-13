@@ -35,7 +35,7 @@ public class LessonRepository : ILessonRepository
         return await conn.ExecuteScalarAsync<int>(
             @"INSERT INTO Lessons (Title, XmlContent, InstructorId, CreatedAt, UpdatedAt)
               VALUES (@Title, @XmlContent, @InstructorId, @CreatedAt, @UpdatedAt);
-              SELECT last_insert_rowid();",
+              SELECT LAST_INSERT_ID();",
             lesson);
     }
 

@@ -34,7 +34,7 @@ public class InstructorRepository : IInstructorRepository
         return await conn.ExecuteScalarAsync<int>(
             @"INSERT INTO Instructors (Username, PasswordHash, DisplayName, Email, CreatedAt, UpdatedAt)
               VALUES (@Username, @PasswordHash, @DisplayName, @Email, @CreatedAt, @UpdatedAt);
-              SELECT last_insert_rowid();",
+              SELECT LAST_INSERT_ID();",
             instructor);
     }
 

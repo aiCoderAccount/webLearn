@@ -6,6 +6,6 @@ public class Lesson
     public string Title { get; set; } = string.Empty;
     public string XmlContent { get; set; } = string.Empty;
     public int InstructorId { get; set; }
-    public string CreatedAt { get; set; } = string.Empty;
-    public string UpdatedAt { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

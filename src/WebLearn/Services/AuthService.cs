@@ -47,7 +47,7 @@ public class AuthService : IAuthService
         if (existing != null)
             return new AuthResult(false, null, "That username is already taken.");
 
-        var now = DateTime.UtcNow.ToString("o");
+        var now = DateTime.UtcNow;
         var instructor = new Instructor
         {
             Username = username,

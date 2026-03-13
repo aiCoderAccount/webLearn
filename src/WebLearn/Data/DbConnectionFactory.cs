@@ -1,4 +1,4 @@
-using Microsoft.Data.Sqlite;
+using MySqlConnector;
 
 namespace WebLearn.Data;
 
@@ -9,11 +9,11 @@ public class DbConnectionFactory
     public DbConnectionFactory(IConfiguration configuration)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? "Data Source=weblearn.db";
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
     }
 
-    public SqliteConnection CreateConnection()
+    public MySqlConnection CreateConnection()
     {
-        return new SqliteConnection(_connectionString);
+        return new MySqlConnection(_connectionString);
     }
 }

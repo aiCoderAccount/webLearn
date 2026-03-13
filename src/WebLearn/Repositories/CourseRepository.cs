@@ -48,7 +48,7 @@ public class CourseRepository : ICourseRepository
         return await conn.ExecuteScalarAsync<int>(
             @"INSERT INTO Courses (Title, Description, InstructorId, IsPublished, CreatedAt, UpdatedAt)
               VALUES (@Title, @Description, @InstructorId, @IsPublished, @CreatedAt, @UpdatedAt);
-              SELECT last_insert_rowid();",
+              SELECT LAST_INSERT_ID();",
             course);
     }
 

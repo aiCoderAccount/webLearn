@@ -1,5 +1,18 @@
 /* WebLearn – site-wide styles */
 
+/* Sticky footer */
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex: 1 0 auto;
+}
+
 /* Hero Banner */
 .hero-banner {
     background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);

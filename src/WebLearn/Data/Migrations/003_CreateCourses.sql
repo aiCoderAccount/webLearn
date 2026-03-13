@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS Courses (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Title TEXT NOT NULL,
-    Description TEXT NOT NULL DEFAULT '',
-    InstructorId INTEGER NOT NULL,
-    IsPublished INTEGER NOT NULL DEFAULT 0,
-    CreatedAt TEXT NOT NULL,
-    UpdatedAt TEXT NOT NULL,
+    Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT NOT NULL,
+    InstructorId INT NOT NULL,
+    IsPublished TINYINT(1) NOT NULL DEFAULT 0,
+    CreatedAt DATETIME NOT NULL,
+    UpdatedAt DATETIME NOT NULL,
     FOREIGN KEY (InstructorId) REFERENCES Instructors(Id)
 );

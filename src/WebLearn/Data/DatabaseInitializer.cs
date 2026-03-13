@@ -1,5 +1,4 @@
 using Dapper;
-using Microsoft.Data.Sqlite;
 
 namespace WebLearn.Data;
 
@@ -55,7 +54,7 @@ public class DatabaseInitializer
                 await connection.ExecuteAsync(sql, transaction: transaction);
                 await connection.ExecuteAsync(
                     "INSERT INTO __MigrationHistory (ScriptName, AppliedOn) VALUES (@ScriptName, @AppliedOn)",
-                    new { ScriptName = scriptName, AppliedOn = DateTime.UtcNow.ToString("o") },
+                    new { ScriptName = scriptName, AppliedOn = DateTime.UtcNow },
                     transaction);
                 transaction.Commit();
                 _logger.LogInformation("Applied migration: {ScriptName}", scriptName);

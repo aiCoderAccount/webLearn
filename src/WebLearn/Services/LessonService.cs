@@ -49,7 +49,7 @@ public class LessonService : ILessonService
         if (!parseResult.IsValid)
             return (false, "XML is invalid: " + string.Join("; ", parseResult.Errors), 0);
 
-        var now = DateTime.UtcNow.ToString("o");
+        var now = DateTime.UtcNow;
         var lesson = new Lesson
         {
             Title = vm.Title,
@@ -80,7 +80,7 @@ public class LessonService : ILessonService
             XmlContent = vm.XmlContent,
             InstructorId = existing.InstructorId,
             CreatedAt = existing.CreatedAt,
-            UpdatedAt = DateTime.UtcNow.ToString("o")
+            UpdatedAt = DateTime.UtcNow
         };
 
         await _lessonRepo.UpdateAsync(updated);

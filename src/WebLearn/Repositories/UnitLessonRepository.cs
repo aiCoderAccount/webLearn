@@ -29,7 +29,7 @@ public class UnitLessonRepository : IUnitLessonRepository
     {
         using var conn = _db.CreateConnection();
         await conn.ExecuteAsync(
-            @"INSERT OR IGNORE INTO UnitLessons (UnitId, LessonId, SortOrder)
+            @"INSERT IGNORE INTO UnitLessons (UnitId, LessonId, SortOrder)
               VALUES (@UnitId, @LessonId, @SortOrder)",
             new { UnitId = unitId, LessonId = lessonId, SortOrder = sortOrder });
     }

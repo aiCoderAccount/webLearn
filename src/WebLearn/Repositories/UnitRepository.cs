@@ -35,7 +35,7 @@ public class UnitRepository : IUnitRepository
         return await conn.ExecuteScalarAsync<int>(
             @"INSERT INTO Units (CourseId, Title, Description, SortOrder, CreatedAt, UpdatedAt)
               VALUES (@CourseId, @Title, @Description, @SortOrder, @CreatedAt, @UpdatedAt);
-              SELECT last_insert_rowid();",
+              SELECT LAST_INSERT_ID();",
             unit);
     }
 
