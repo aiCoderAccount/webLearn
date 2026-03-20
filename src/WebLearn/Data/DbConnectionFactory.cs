@@ -1,4 +1,4 @@
-using MySqlConnector;
+using Microsoft.Data.Sqlite;
 
 namespace WebLearn.Data;
 
@@ -12,8 +12,8 @@ public class DbConnectionFactory
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
     }
 
-    public MySqlConnection CreateConnection()
+    public SqliteConnection CreateConnection()
     {
-        return new MySqlConnection(_connectionString);
+        return new SqliteConnection(_connectionString);
     }
 }

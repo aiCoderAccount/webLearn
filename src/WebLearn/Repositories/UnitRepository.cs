@@ -32,11 +32,11 @@ public class UnitRepository : IUnitRepository
     public async Task<int> CreateAsync(Unit unit)
     {
         using var conn = _db.CreateConnection();
-        return await conn.ExecuteScalarAsync<int>(
+        await conn.ExecuteAsync(
             @"INSERT INTO Units (CourseId, Title, Description, SortOrder, CreatedAt, UpdatedAt)
-              VALUES (@CourseId, @Title, @Description, @SortOrder, @CreatedAt, @UpdatedAt);
-              SELECT LAST_INSERT_ID();",
+              VALUES (@CourseId, @Title, @Description, @SortOrder, @CreatedAt, @UpdatedAt);",
             unit);
+        return await conn.ExecuteScalarAsync<int>("SELECT last_insert_rowid();");
     }
 
     public async Task UpdateAsync(Unit unit)

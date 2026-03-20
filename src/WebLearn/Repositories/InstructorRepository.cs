@@ -31,11 +31,11 @@ public class InstructorRepository : IInstructorRepository
     public async Task<int> CreateAsync(Instructor instructor)
     {
         using var conn = _db.CreateConnection();
-        return await conn.ExecuteScalarAsync<int>(
+        await conn.ExecuteAsync(
             @"INSERT INTO Instructors (Username, PasswordHash, DisplayName, Email, CreatedAt, UpdatedAt)
-              VALUES (@Username, @PasswordHash, @DisplayName, @Email, @CreatedAt, @UpdatedAt);
-              SELECT LAST_INSERT_ID();",
+              VALUES (@Username, @PasswordHash, @DisplayName, @Email, @CreatedAt, @UpdatedAt);",
             instructor);
+        return await conn.ExecuteScalarAsync<int>("SELECT last_insert_rowid();");
     }
 
     public async Task UpdateAsync(Instructor instructor)

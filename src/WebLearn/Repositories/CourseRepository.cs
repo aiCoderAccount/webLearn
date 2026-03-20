@@ -45,11 +45,11 @@ public class CourseRepository : ICourseRepository
     public async Task<int> CreateAsync(Course course)
     {
         using var conn = _db.CreateConnection();
-        return await conn.ExecuteScalarAsync<int>(
+        await conn.ExecuteAsync(
             @"INSERT INTO Courses (Title, Description, InstructorId, IsPublished, CreatedAt, UpdatedAt)
-              VALUES (@Title, @Description, @InstructorId, @IsPublished, @CreatedAt, @UpdatedAt);
-              SELECT LAST_INSERT_ID();",
+              VALUES (@Title, @Description, @InstructorId, @IsPublished, @CreatedAt, @UpdatedAt);",
             course);
+        return await conn.ExecuteScalarAsync<int>("SELECT last_insert_rowid();");
     }
 
     public async Task UpdateAsync(Course course)

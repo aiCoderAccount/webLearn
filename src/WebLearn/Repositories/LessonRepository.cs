@@ -32,11 +32,11 @@ public class LessonRepository : ILessonRepository
     public async Task<int> CreateAsync(Lesson lesson)
     {
         using var conn = _db.CreateConnection();
-        return await conn.ExecuteScalarAsync<int>(
+        await conn.ExecuteAsync(
             @"INSERT INTO Lessons (Title, XmlContent, InstructorId, CreatedAt, UpdatedAt)
-              VALUES (@Title, @XmlContent, @InstructorId, @CreatedAt, @UpdatedAt);
-              SELECT LAST_INSERT_ID();",
+              VALUES (@Title, @XmlContent, @InstructorId, @CreatedAt, @UpdatedAt);",
             lesson);
+        return await conn.ExecuteScalarAsync<int>("SELECT last_insert_rowid();");
     }
 
     public async Task UpdateAsync(Lesson lesson)
