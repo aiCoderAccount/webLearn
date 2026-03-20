@@ -107,10 +107,10 @@ Lessons are written in a custom XML schema. Here is a complete example:
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd WebLearn
+cd webLearn/src/WebLearn
 
 # Run the application (dependencies are restored automatically)
-dotnet run --project src/WebLearn
+dotnet run -
 ```
 
 The app will start at **http://localhost:5084**. The SQLite database and all tables are created automatically on first run.
