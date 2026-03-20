@@ -5,15 +5,8 @@ using WebLearn.Repositories.Interfaces;
 
 namespace WebLearn.Repositories;
 
-public class CourseRepository : ICourseRepository
+public class CourseRepository(DbConnectionFactory db) : BaseRepository(db), ICourseRepository
 {
-    private readonly DbConnectionFactory _db;
-
-    public CourseRepository(DbConnectionFactory db)
-    {
-        _db = db;
-    }
-
     public async Task<IEnumerable<Course>> GetAllPublishedAsync()
     {
         using var conn = _db.CreateConnection();

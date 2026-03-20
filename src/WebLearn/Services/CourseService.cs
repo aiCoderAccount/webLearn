@@ -36,39 +36,25 @@ public class CourseService : ICourseService
     public async Task<CourseDetailViewModel?> GetCourseDetailAsync(int courseId, bool includeUnpublished = false)
     {
         var course = await _courseRepo.GetByIdAsync(courseId);
-        if (course == null) return null;
-        if (!includeUnpublished && course.IsPublished == 0) return null;
+        if (course == null || (!includeUnpublished && course.IsPublished == 0)) return null;
 
         var units = await _unitRepo.GetByCourseIdAsync(courseId);
-        var unitDetails = new List<UnitDetailViewModel>();
-        foreach (var unit in units)
-        {
-            var unitLessons = await _unitLessonRepo.GetByUnitIdAsync(unit.Id);
-            var lessonList = new List<Lesson>();
-            foreach (var ul in unitLessons)
-            {
-                var lesson = await _lessonRepo.GetByIdAsync(ul.LessonId);
-                if (lesson != null) lessonList.Add(lesson);
-            }
-            unitDetails.Add(new UnitDetailViewModel { Unit = unit, Lessons = lessonList });
-        }
+        var unitDetails = await Task.WhenAll(units.Select(BuildUnitDetailAsync));
 
-        return new CourseDetailViewModel { Course = course, Units = unitDetails };
+        return new CourseDetailViewModel { Course = course, Units = unitDetails.ToList() };
     }
 
     public async Task<UnitDetailViewModel?> GetUnitDetailAsync(int unitId)
     {
         var unit = await _unitRepo.GetByIdAsync(unitId);
-        if (unit == null) return null;
+        return unit == null ? null : await BuildUnitDetailAsync(unit);
+    }
 
-        var unitLessons = await _unitLessonRepo.GetByUnitIdAsync(unitId);
-        var lessons = new List<Lesson>();
-        foreach (var ul in unitLessons)
-        {
-            var lesson = await _lessonRepo.GetByIdAsync(ul.LessonId);
-            if (lesson != null) lessons.Add(lesson);
-        }
-
+    private async Task<UnitDetailViewModel> BuildUnitDetailAsync(Unit unit)
+    {
+        var unitLessons = await _unitLessonRepo.GetByUnitIdAsync(unit.Id);
+        var lessons = (await Task.WhenAll(unitLessons.Select(ul => _lessonRepo.GetByIdAsync(ul.LessonId))))
+            .Where(l => l != null).Cast<Lesson>().ToList();
         return new UnitDetailViewModel { Unit = unit, Lessons = lessons };
     }
 
@@ -215,8 +201,6 @@ public class CourseService : ICourseService
         }
     }
 
-    public async Task ReorderLessonAsync(int unitId, int lessonId, int newOrder)
-    {
-        await _unitLessonRepo.UpdateSortOrderAsync(unitId, lessonId, newOrder);
-    }
+    public Task ReorderLessonAsync(int unitId, int lessonId, int newOrder) =>
+        _unitLessonRepo.UpdateSortOrderAsync(unitId, lessonId, newOrder);
 }

@@ -5,15 +5,8 @@ using WebLearn.Repositories.Interfaces;
 
 namespace WebLearn.Repositories;
 
-public class UnitLessonRepository : IUnitLessonRepository
+public class UnitLessonRepository(DbConnectionFactory db) : BaseRepository(db), IUnitLessonRepository
 {
-    private readonly DbConnectionFactory _db;
-
-    public UnitLessonRepository(DbConnectionFactory db)
-    {
-        _db = db;
-    }
-
     public async Task<IEnumerable<UnitLesson>> GetByUnitIdAsync(int unitId)
     {
         using var conn = _db.CreateConnection();

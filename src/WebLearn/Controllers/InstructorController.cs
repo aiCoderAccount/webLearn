@@ -1,54 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
+using WebLearn.Constants;
 using WebLearn.Models.ViewModels;
 using WebLearn.Services.Interfaces;
 
 namespace WebLearn.Controllers;
 
-public class InstructorController : Controller
+public class InstructorController(ICourseService courseService, ILessonService lessonService)
+    : InstructorBaseController
 {
-    private readonly ICourseService _courseService;
-    private readonly ILessonService _lessonService;
-
-    public InstructorController(ICourseService courseService, ILessonService lessonService)
-    {
-        _courseService = courseService;
-        _lessonService = lessonService;
-    }
-
-    private int? GetInstructorId() => HttpContext.Session.GetInt32("InstructorId");
-
     // Dashboard
     public async Task<IActionResult> Dashboard()
     {
-        var id = GetInstructorId();
-        if (id == null) return RedirectToAction("Login", "Auth");
-
-        var courses = await _courseService.GetByInstructorIdAsync(id.Value);
-        var lessons = await _lessonService.GetByInstructorIdAsync(id.Value);
+        var courses = await courseService.GetByInstructorIdAsync(InstructorId);
+        var lessons = await lessonService.GetByInstructorIdAsync(InstructorId);
         ViewData["CourseCount"] = courses.Count();
         ViewData["LessonCount"] = lessons.Count();
-        ViewData["InstructorName"] = HttpContext.Session.GetString("InstructorName");
+        ViewData["InstructorName"] = HttpContext.Session.GetString(SessionKeys.InstructorName);
         return View();
     }
 
     // ── Courses ──────────────────────────────────────────────────
     public async Task<IActionResult> Courses()
     {
-        var id = GetInstructorId()!.Value;
-        var courses = await _courseService.GetByInstructorIdAsync(id);
+        var courses = await courseService.GetByInstructorIdAsync(InstructorId);
         return View(courses);
     }
 
     [HttpGet]
     public IActionResult CreateCourse() => View(new CourseCreateViewModel());
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateCourse(CourseCreateViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        await _courseService.CreateCourseAsync(vm, id);
+        await courseService.CreateCourseAsync(vm, InstructorId);
         TempData["Success"] = "Course created successfully.";
         return RedirectToAction(nameof(Courses));
     }
@@ -56,8 +41,8 @@ public class InstructorController : Controller
     [HttpGet]
     public async Task<IActionResult> EditCourse(int id)
     {
-        var course = await _courseService.GetByIdAsync(id);
-        if (course == null || course.InstructorId != GetInstructorId()) return Forbid();
+        var course = await courseService.GetByIdAsync(id);
+        if (course == null || course.InstructorId != InstructorId) return Forbid();
         var vm = new CourseCreateViewModel
         {
             Id = course.Id,
@@ -68,24 +53,19 @@ public class InstructorController : Controller
         return View(vm);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> EditCourse(CourseCreateViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        var success = await _courseService.UpdateCourseAsync(vm, id);
-        if (!success) return Forbid();
+        if (!await courseService.UpdateCourseAsync(vm, InstructorId)) return Forbid();
         TempData["Success"] = "Course updated.";
         return RedirectToAction(nameof(Courses));
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteCourse(int id)
     {
-        var instructorId = GetInstructorId()!.Value;
-        await _courseService.DeleteCourseAsync(id, instructorId);
+        await courseService.DeleteCourseAsync(id, InstructorId);
         TempData["Success"] = "Course deleted.";
         return RedirectToAction(nameof(Courses));
     }
@@ -93,9 +73,9 @@ public class InstructorController : Controller
     // ── Units ─────────────────────────────────────────────────────
     public async Task<IActionResult> Units(int courseId)
     {
-        var course = await _courseService.GetByIdAsync(courseId);
-        if (course == null || course.InstructorId != GetInstructorId()) return Forbid();
-        var detail = await _courseService.GetCourseDetailAsync(courseId, includeUnpublished: true);
+        var course = await courseService.GetByIdAsync(courseId);
+        if (course == null || course.InstructorId != InstructorId) return Forbid();
+        var detail = await courseService.GetCourseDetailAsync(courseId, includeUnpublished: true);
         ViewData["Course"] = course;
         return View(detail?.Units ?? new List<UnitDetailViewModel>());
     }
@@ -103,18 +83,16 @@ public class InstructorController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateUnit(int courseId)
     {
-        var course = await _courseService.GetByIdAsync(courseId);
-        if (course == null || course.InstructorId != GetInstructorId()) return Forbid();
+        var course = await courseService.GetByIdAsync(courseId);
+        if (course == null || course.InstructorId != InstructorId) return Forbid();
         return View(new UnitCreateViewModel { CourseId = courseId });
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateUnit(UnitCreateViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        await _courseService.CreateUnitAsync(vm, id);
+        await courseService.CreateUnitAsync(vm, InstructorId);
         TempData["Success"] = "Unit created.";
         return RedirectToAction(nameof(Units), new { courseId = vm.CourseId });
     }
@@ -124,30 +102,30 @@ public class InstructorController : Controller
     {
         var course = await GetUnitCourseAsync(id);
         if (course == null) return Forbid();
-        var unit = (await _courseService.GetCourseDetailAsync(course.Id, true))?.Units.FirstOrDefault(u => u.Unit.Id == id)?.Unit;
+        var unit = (await courseService.GetCourseDetailAsync(course.Id, true))
+            ?.Units.FirstOrDefault(u => u.Unit.Id == id)?.Unit;
         if (unit == null) return NotFound();
-        var vm = new UnitCreateViewModel { Id = unit.Id, CourseId = unit.CourseId, Title = unit.Title, Description = unit.Description, SortOrder = unit.SortOrder };
+        var vm = new UnitCreateViewModel
+        {
+            Id = unit.Id, CourseId = unit.CourseId, Title = unit.Title,
+            Description = unit.Description, SortOrder = unit.SortOrder
+        };
         return View(vm);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUnit(UnitCreateViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        var success = await _courseService.UpdateUnitAsync(vm, id);
-        if (!success) return Forbid();
+        if (!await courseService.UpdateUnitAsync(vm, InstructorId)) return Forbid();
         TempData["Success"] = "Unit updated.";
         return RedirectToAction(nameof(Units), new { courseId = vm.CourseId });
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUnit(int id, int courseId)
     {
-        var instructorId = GetInstructorId()!.Value;
-        await _courseService.DeleteUnitAsync(id, instructorId);
+        await courseService.DeleteUnitAsync(id, InstructorId);
         TempData["Success"] = "Unit deleted.";
         return RedirectToAction(nameof(Units), new { courseId });
     }
@@ -156,48 +134,42 @@ public class InstructorController : Controller
     [HttpGet]
     public async Task<IActionResult> AssignLessons(int unitId)
     {
-        var id = GetInstructorId()!.Value;
-        var vm = await _courseService.GetAssignLessonViewModelAsync(unitId, id);
+        var vm = await courseService.GetAssignLessonViewModelAsync(unitId, InstructorId);
         if (vm == null) return Forbid();
         return View(vm);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> AssignLessons(int unitId, List<int> lessonIds)
     {
-        var id = GetInstructorId()!.Value;
-        await _courseService.SaveLessonAssignmentsAsync(unitId, lessonIds ?? new List<int>(), id);
+        await courseService.SaveLessonAssignmentsAsync(unitId, lessonIds ?? [], InstructorId);
         TempData["Success"] = "Lesson assignments saved.";
-        var vm = await _courseService.GetAssignLessonViewModelAsync(unitId, id);
+        var vm = await courseService.GetAssignLessonViewModelAsync(unitId, InstructorId);
         return RedirectToAction(nameof(Units), new { courseId = vm?.Course.Id });
     }
 
     [HttpPost]
     public async Task<IActionResult> ReorderLesson([FromBody] ReorderRequest req)
     {
-        await _courseService.ReorderLessonAsync(req.UnitId, req.LessonId, req.NewOrder);
+        await courseService.ReorderLessonAsync(req.UnitId, req.LessonId, req.NewOrder);
         return Ok();
     }
 
     // ── Lessons ───────────────────────────────────────────────────
     public async Task<IActionResult> Lessons()
     {
-        var id = GetInstructorId()!.Value;
-        var lessons = await _lessonService.GetByInstructorIdAsync(id);
+        var lessons = await lessonService.GetByInstructorIdAsync(InstructorId);
         return View(lessons);
     }
 
     [HttpGet]
     public IActionResult CreateLesson() => View(new LessonEditViewModel());
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateLesson(LessonEditViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        var (success, error, newId) = await _lessonService.CreateAsync(vm, id);
+        var (success, error, _) = await lessonService.CreateAsync(vm, InstructorId);
         if (!success)
         {
             ModelState.AddModelError(string.Empty, error ?? "Failed to create lesson.");
@@ -210,19 +182,17 @@ public class InstructorController : Controller
     [HttpGet]
     public async Task<IActionResult> EditLesson(int id)
     {
-        var lesson = await _lessonService.GetByIdAsync(id);
-        if (lesson == null || lesson.InstructorId != GetInstructorId()) return Forbid();
+        var lesson = await lessonService.GetByIdAsync(id);
+        if (lesson == null || lesson.InstructorId != InstructorId) return Forbid();
         var vm = new LessonEditViewModel { Id = lesson.Id, Title = lesson.Title, XmlContent = lesson.XmlContent };
         return View(vm);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> EditLesson(LessonEditViewModel vm)
     {
         if (!ModelState.IsValid) return View(vm);
-        var id = GetInstructorId()!.Value;
-        var (success, error) = await _lessonService.UpdateAsync(vm, id);
+        var (success, error) = await lessonService.UpdateAsync(vm, InstructorId);
         if (!success)
         {
             ModelState.AddModelError(string.Empty, error ?? "Failed to update lesson.");
@@ -232,12 +202,10 @@ public class InstructorController : Controller
         return RedirectToAction(nameof(Lessons));
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteLesson(int id)
     {
-        var instructorId = GetInstructorId()!.Value;
-        await _lessonService.DeleteAsync(id, instructorId);
+        await lessonService.DeleteAsync(id, InstructorId);
         TempData["Success"] = "Lesson deleted.";
         return RedirectToAction(nameof(Lessons));
     }
@@ -245,18 +213,17 @@ public class InstructorController : Controller
     [HttpPost]
     public IActionResult PreviewLesson([FromBody] PreviewRequest req)
     {
-        var html = _lessonService.PreviewXml(req.Xml ?? string.Empty);
+        var html = lessonService.PreviewXml(req.Xml ?? string.Empty);
         return Content(html, "text/html");
     }
 
     // ── Helpers ───────────────────────────────────────────────────
     private async Task<WebLearn.Models.Course?> GetUnitCourseAsync(int unitId)
     {
-        // We need to find which course this unit belongs to, and verify ownership
-        var vm = await _courseService.GetByInstructorIdAsync(GetInstructorId()!.Value);
-        foreach (var course in vm)
+        var courses = await courseService.GetByInstructorIdAsync(InstructorId);
+        foreach (var course in courses)
         {
-            var detail = await _courseService.GetCourseDetailAsync(course.Id, includeUnpublished: true);
+            var detail = await courseService.GetCourseDetailAsync(course.Id, includeUnpublished: true);
             if (detail?.Units.Any(u => u.Unit.Id == unitId) == true)
                 return course;
         }

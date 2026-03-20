@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using WebLearn.Constants;
 using WebLearn.Models.ViewModels;
 using WebLearn.Services.Interfaces;
 
@@ -16,7 +17,7 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult Login(string? returnUrl)
     {
-        if (HttpContext.Session.GetInt32("InstructorId") != null)
+        if (HttpContext.Session.GetInt32(SessionKeys.InstructorId) != null)
             return RedirectToAction("Dashboard", "Instructor");
 
         ViewData["ReturnUrl"] = returnUrl;
@@ -37,8 +38,8 @@ public class AuthController : Controller
             return View(vm);
         }
 
-        HttpContext.Session.SetInt32("InstructorId", result.Instructor!.Id);
-        HttpContext.Session.SetString("InstructorName", result.Instructor.DisplayName);
+        HttpContext.Session.SetInt32(SessionKeys.InstructorId, result.Instructor!.Id);
+        HttpContext.Session.SetString(SessionKeys.InstructorName, result.Instructor.DisplayName);
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
@@ -49,7 +50,7 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult Register()
     {
-        if (HttpContext.Session.GetInt32("InstructorId") != null)
+        if (HttpContext.Session.GetInt32(SessionKeys.InstructorId) != null)
             return RedirectToAction("Dashboard", "Instructor");
 
         return View(new RegisterViewModel());
@@ -69,8 +70,8 @@ public class AuthController : Controller
             return View(vm);
         }
 
-        HttpContext.Session.SetInt32("InstructorId", result.Instructor!.Id);
-        HttpContext.Session.SetString("InstructorName", result.Instructor.DisplayName);
+        HttpContext.Session.SetInt32(SessionKeys.InstructorId, result.Instructor!.Id);
+        HttpContext.Session.SetString(SessionKeys.InstructorName, result.Instructor.DisplayName);
 
         TempData["Success"] = "Account created successfully. Welcome!";
         return RedirectToAction("Dashboard", "Instructor");
